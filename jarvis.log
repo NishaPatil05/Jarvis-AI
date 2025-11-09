@@ -1,0 +1,133 @@
+2025-09-27 13:53:52,373 - DEBUG - GEMINI_API_KEY set: True
+2025-09-27 13:53:52,373 - DEBUG - WEATHER_API_KEY set: True
+2025-09-27 13:53:52,373 - DEBUG - NEWS_API_KEY set: True
+2025-09-27 13:53:52,374 - DEBUG - PICOVOICE_ACCESS_KEY set: True
+2025-09-27 13:53:52,374 - DEBUG - WHATSAPP_CONTACT set: +917058585562
+2025-09-27 13:53:52,375 - DEBUG - Gemini model initialized with gemini-2.0-flash.
+2025-09-27 13:53:52,378 - DEBUG - Loaded reminder: for meeting at 03:32 PM on September 27, 2025 for user user1
+2025-09-27 13:53:52,379 - DEBUG - Loaded reminder: for lecture at 04:35 PM on September 27, 2025 for user user1
+2025-09-27 13:53:54,394 - DEBUG - Listening for wake word 'JARVIS'...
+2025-09-27 13:53:54,426 - INFO - Selected port: 5000
+2025-09-27 13:53:54,427 - WARNING - SSL certificates not found. Falling back to HTTP...
+2025-09-27 13:53:54,518 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.137.122:5000
+2025-09-27 13:53:54,519 - INFO - [33mPress CTRL+C to quit[0m
+2025-09-27 13:53:54,522 - INFO -  * Restarting with stat
+2025-09-27 13:53:56,264 - DEBUG - GEMINI_API_KEY set: True
+2025-09-27 13:53:56,264 - DEBUG - WEATHER_API_KEY set: True
+2025-09-27 13:53:56,264 - DEBUG - NEWS_API_KEY set: True
+2025-09-27 13:53:56,264 - DEBUG - PICOVOICE_ACCESS_KEY set: True
+2025-09-27 13:53:56,264 - DEBUG - WHATSAPP_CONTACT set: +917058585562
+2025-09-27 13:53:56,266 - DEBUG - Gemini model initialized with gemini-2.0-flash.
+2025-09-27 13:53:56,270 - DEBUG - Loaded reminder: for meeting at 03:32 PM on September 27, 2025 for user user1
+2025-09-27 13:53:56,271 - DEBUG - Loaded reminder: for lecture at 04:35 PM on September 27, 2025 for user user1
+2025-09-27 13:53:58,028 - DEBUG - Listening for wake word 'JARVIS'...
+2025-09-27 13:53:58,297 - INFO - Selected port: 5001
+2025-09-27 13:53:58,297 - WARNING - SSL certificates not found. Falling back to HTTP...
+2025-09-27 13:53:58,320 - WARNING -  * Debugger is active!
+2025-09-27 13:53:58,326 - INFO -  * Debugger PIN: 474-800-402
+2025-09-27 13:54:04,136 - INFO - 127.0.0.1 - - [27/Sep/2025 13:54:04] "GET / HTTP/1.1" 200 -
+2025-09-27 13:54:05,635 - INFO - 127.0.0.1 - - [27/Sep/2025 13:54:05] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-09-27 13:54:43,551 - DEBUG - Raw query received: open youtube search a kachori recipe (user: user1)
+2025-09-27 13:54:43,552 - DEBUG - Cleaned query: open youtube search a kachori recipe
+2025-09-27 13:54:43,780 - DEBUG - Response: Opening YouTube and searching for 'search a kachori recipe'....
+2025-09-27 13:54:43,781 - INFO - 127.0.0.1 - - [27/Sep/2025 13:54:43] "POST /ask HTTP/1.1" 200 -
+2025-09-27 13:55:01,328 - DEBUG - Raw query received: what is java (user: user1)
+2025-09-27 13:55:01,329 - DEBUG - Cleaned query: what is java
+2025-09-27 13:55:03,555 - DEBUG - Response: Java is a high-level, object-oriented programming language known for its **platform independence ("w...
+2025-09-27 13:55:03,564 - INFO - 127.0.0.1 - - [27/Sep/2025 13:55:03] "POST /ask HTTP/1.1" 200 -
+2025-09-27 13:55:37,472 - DEBUG - Raw query received: set brightness to 100 (user: user1)
+2025-09-27 13:55:37,473 - DEBUG - Cleaned query: set brightness to 100
+2025-09-27 13:55:37,476 - DEBUG - brightness set request display None with method None
+2025-09-27 13:55:37,480 - DEBUG - 'windows_monitors_info_raw' not present in cache
+2025-09-27 13:55:38,049 - WARNING - exception parsing edid str for DISPLAY\CMN1541\4&ce0a895&0&UID8388688_0 - EDIDParseError: parsed EDID returned invalid display name
+2025-09-27 13:55:38,050 - DEBUG - cache set 'windows_monitors_info_raw', expires=1
+2025-09-27 13:55:38,292 - DEBUG - Response: Brightness set to 100%....
+2025-09-27 13:55:38,293 - INFO - 127.0.0.1 - - [27/Sep/2025 13:55:38] "POST /ask HTTP/1.1" 200 -
+2025-09-27 13:55:48,281 - DEBUG - Raw query received: set brightness to 10 (user: user1)
+2025-09-27 13:55:48,283 - DEBUG - Cleaned query: set brightness to 10
+2025-09-27 13:55:48,284 - DEBUG - brightness set request display None with method None
+2025-09-27 13:55:48,285 - DEBUG - delete expired key windows_monitors_info_raw
+2025-09-27 13:55:48,285 - DEBUG - 'windows_monitors_info_raw' not present in cache
+2025-09-27 13:55:48,674 - WARNING - exception parsing edid str for DISPLAY\CMN1541\4&ce0a895&0&UID8388688_0 - EDIDParseError: parsed EDID returned invalid display name
+2025-09-27 13:55:48,675 - DEBUG - cache set 'windows_monitors_info_raw', expires=1
+2025-09-27 13:55:48,906 - DEBUG - Response: Brightness set to 10%....
+2025-09-27 13:55:48,909 - INFO - 127.0.0.1 - - [27/Sep/2025 13:55:48] "POST /ask HTTP/1.1" 200 -
+2025-09-27 13:56:06,668 - DEBUG - Raw query received: set volume to 100 (user: user1)
+2025-09-27 13:56:06,670 - DEBUG - Cleaned query: set volume to 100
+2025-09-27 13:56:06,678 - DEBUG - Release <POINTER(IMMDeviceEnumerator) ptr=0x12572561f50 at 125748ce2d0>
+2025-09-27 13:56:06,710 - DEBUG - Response: Volume set to 100%....
+2025-09-27 13:56:06,729 - DEBUG - Release <POINTER(IMMDevice) ptr=0x12574b61e40 at 125748cd2d0>
+2025-09-27 13:56:06,742 - DEBUG - Release <POINTER(IAudioEndpointVolume) ptr=0x12572560c60 at 125748ce350>
+2025-09-27 13:56:06,747 - INFO - 127.0.0.1 - - [27/Sep/2025 13:56:06] "POST /ask HTTP/1.1" 200 -
+2025-09-27 13:56:24,150 - DEBUG - Raw query received: set volume to 10 (user: user1)
+2025-09-27 13:56:24,152 - DEBUG - Cleaned query: set volume to 10
+2025-09-27 13:56:24,158 - DEBUG - Release <POINTER(IMMDeviceEnumerator) ptr=0x12572561f50 at 125748a63d0>
+2025-09-27 13:56:24,175 - DEBUG - Response: Volume set to 10%....
+2025-09-27 13:56:24,177 - DEBUG - Release <POINTER(IMMDevice) ptr=0x12574b636a0 at 125748a4150>
+2025-09-27 13:56:24,178 - DEBUG - Release <POINTER(IAudioEndpointVolume) ptr=0x12572560660 at 125748a55d0>
+2025-09-27 13:56:24,181 - INFO - 127.0.0.1 - - [27/Sep/2025 13:56:24] "POST /ask HTTP/1.1" 200 -
+2025-09-27 13:56:38,490 - DEBUG - Raw query received: set volume to 100 (user: user1)
+2025-09-27 13:56:38,491 - DEBUG - Cleaned query: set volume to 100
+2025-09-27 13:56:38,500 - DEBUG - Release <POINTER(IMMDeviceEnumerator) ptr=0x12572561f50 at 12574733850>
+2025-09-27 13:56:38,528 - DEBUG - Response: Volume set to 100%....
+2025-09-27 13:56:38,546 - DEBUG - Release <POINTER(IMMDevice) ptr=0x12574b61990 at 125746eead0>
+2025-09-27 13:56:38,557 - DEBUG - Release <POINTER(IAudioEndpointVolume) ptr=0x12572560660 at 125746fb450>
+2025-09-27 13:56:38,561 - INFO - 127.0.0.1 - - [27/Sep/2025 13:56:38] "POST /ask HTTP/1.1" 200 -
+2025-09-27 13:56:54,012 - DEBUG - Raw query received: hello world in java code (user: user1)
+2025-09-27 13:56:54,015 - DEBUG - Cleaned query: hello world in java code
+2025-09-27 13:57:06,950 - DEBUG - Response: **"Hello, World!" in Java:**
+
+*   **Purpose:** Simplest program to demonstrate basic Java syntax.
+* ...
+2025-09-27 13:57:06,952 - INFO - 127.0.0.1 - - [27/Sep/2025 13:57:06] "POST /ask HTTP/1.1" 200 -
+2025-09-27 14:03:34,508 - DEBUG - Wake word 'JARVIS' detected
+2025-09-27 14:03:34,510 - DEBUG - Wake word 'JARVIS' detected
+2025-09-27 14:09:02,852 - INFO -  * Detected change in 'c:\\Users\\Hp\\Desktop\\check\\app.py', reloading
+2025-09-27 14:09:24,415 - DEBUG - GEMINI_API_KEY set: True
+2025-09-27 14:09:24,415 - DEBUG - WEATHER_API_KEY set: True
+2025-09-27 14:09:24,415 - DEBUG - NEWS_API_KEY set: True
+2025-09-27 14:09:24,415 - DEBUG - PICOVOICE_ACCESS_KEY set: True
+2025-09-27 14:09:24,415 - DEBUG - WHATSAPP_CONTACT set: +917058585562
+2025-09-27 14:09:24,416 - DEBUG - Gemini model initialized with gemini-2.0-flash.
+2025-09-27 14:09:24,419 - DEBUG - Loaded reminder: for meeting at 03:32 PM on September 27, 2025 for user user1
+2025-09-27 14:09:24,421 - DEBUG - Loaded reminder: for lecture at 04:35 PM on September 27, 2025 for user user1
+2025-09-27 14:09:26,454 - INFO - Selected port: 5000
+2025-09-27 14:09:26,461 - WARNING - SSL certificates not found. Falling back to HTTP...
+2025-09-27 14:09:26,533 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.137.122:5000
+2025-09-27 14:09:26,534 - INFO - [33mPress CTRL+C to quit[0m
+2025-09-27 14:09:26,537 - INFO -  * Restarting with stat
+2025-09-27 14:09:26,996 - DEBUG - Listening for wake word 'JARVIS'...
+2025-09-27 14:09:28,451 - DEBUG - GEMINI_API_KEY set: True
+2025-09-27 14:09:28,452 - DEBUG - WEATHER_API_KEY set: True
+2025-09-27 14:09:28,452 - DEBUG - NEWS_API_KEY set: True
+2025-09-27 14:09:28,453 - DEBUG - PICOVOICE_ACCESS_KEY set: True
+2025-09-27 14:09:28,453 - DEBUG - WHATSAPP_CONTACT set: +917058585562
+2025-09-27 14:09:28,455 - DEBUG - Gemini model initialized with gemini-2.0-flash.
+2025-09-27 14:09:28,461 - DEBUG - Loaded reminder: for meeting at 03:32 PM on September 27, 2025 for user user1
+2025-09-27 14:09:28,463 - DEBUG - Loaded reminder: for lecture at 04:35 PM on September 27, 2025 for user user1
+2025-09-27 14:09:30,001 - DEBUG - Listening for wake word 'JARVIS'...
+2025-09-27 14:09:30,496 - INFO - Selected port: 5001
+2025-09-27 14:09:30,497 - WARNING - SSL certificates not found. Falling back to HTTP...
+2025-09-27 14:09:30,520 - WARNING -  * Debugger is active!
+2025-09-27 14:09:30,529 - INFO -  * Debugger PIN: 474-800-402
+2025-09-27 14:09:36,236 - INFO - 127.0.0.1 - - [27/Sep/2025 14:09:36] "GET / HTTP/1.1" 200 -
+2025-09-27 14:09:37,595 - INFO - 127.0.0.1 - - [27/Sep/2025 14:09:37] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-09-27 14:10:16,216 - DEBUG - Raw query received: today's headline (user: user1)
+2025-09-27 14:10:16,226 - DEBUG - Cleaned query: today's headline
+2025-09-27 14:10:19,485 - DEBUG - Response: Please provide me with the headline! I need the headline to summarize the key information for you. 
+...
+2025-09-27 14:10:19,486 - INFO - 127.0.0.1 - - [27/Sep/2025 14:10:19] "POST /ask HTTP/1.1" 200 -
+2025-09-27 14:10:46,154 - DEBUG - Raw query received: today's news (user: user1)
+2025-09-27 14:10:46,155 - DEBUG - Cleaned query: today's news
+2025-09-27 14:10:46,162 - DEBUG - Starting new HTTPS connection (1): newsapi.org:443
+2025-09-27 14:10:46,900 - DEBUG - https://newsapi.org:443 "GET /v2/top-headlines?language=en&country=in&pageSize=3 HTTP/1.1" 200 None
+2025-09-27 14:10:46,903 - WARNING - No news articles found: {'status': 'ok', 'totalResults': 0, 'articles': []}
+2025-09-27 14:10:46,911 - DEBUG - Response: No news available at the moment. Try again later....
+2025-09-27 14:10:46,914 - INFO - 127.0.0.1 - - [27/Sep/2025 14:10:46] "POST /ask HTTP/1.1" 200 -
+2025-09-27 14:11:58,632 - INFO -  * Detected change in 'c:\\Users\\Hp\\Desktop\\check\\app.py', reloading

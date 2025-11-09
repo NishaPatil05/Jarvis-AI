@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic HUD Login - JARVIS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #000;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            font-family: monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas#matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        .login-form {
+            position: absolute;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #00e5ff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px #00e5ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .login-form h2 {
+            color: #00e5ff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00e5ff;
+        }
+        .login-form input {
+            width: 250px;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #00e5ff;
+            background: rgba(0, 0, 0, 0.5);
+            color: #00e5ff;
+            font-size: 16px;
+            outline: none;
+        }
+        .login-form input::placeholder {
+            color: rgba(0, 229, 255, 0.5);
+        }
+        .login-form button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 6px;
+            border: 1px solid #00e5ff;
+            background: #00e5ff10;
+            color: #00e5ff;
+            font-size: 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+        .login-form button:hover {
+            background: #00e5ff30;
+            box-shadow: 0 0 10px #00e5ff;
+        }
+        .hud {
+            position: relative;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+        }
+        .hud-text-bold {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 25px;
+            font-weight: 1000;
+            font-family: 'Orbitron', sans-serif;
+            color: #f5f8f8;
+            letter-spacing: 6px;
+            text-shadow: 0 0 10px #00e5ff, 0 0 20px #00e5ff, 0 0 30px #00e5ff, 0 0 40px #00e5ff, 0 0 50px #00e5ff;
+            animation: pulseText 2s infinite alternate;
+        }
+        @keyframes pulseText {
+            from { text-shadow: 0 0 10px #00e5ff, 0 0 20px #00e5ff, 0 0 30px #00e5ff, 0 0 40px #00e5ff, 0 0 50px #00e5ff; opacity: 0.9; }
+            to { text-shadow: 0 0 20px #00e5ff, 0 0 40px #00e5ff, 0 0 60px #00e5ff, 0 0 80px #00e5ff, 0 0 100px #00e5ff; opacity: 1; }
+        }
+        .hud-subtext {
+            position: absolute;
+            top: 90%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            color: #b3d2e7;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px #00e5ff, 0 0 20px #00e5ff, 0 0 30px #00e5ff;
+            max-width: 80%;
+            text-align: center;
+        }
+        .core {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #00e5ff44, #002244 80%);
+            box-shadow: 0 0 40px #00e5ff, 0 0 90px #00e5ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: pulse 2s infinite alternate;
+            overflow: hidden;
+            z-index: 10;
+            position: relative;
+        }
+        .earth-glow {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3), 0 0 40px rgba(0, 229, 255, 0.2), 0 0 60px rgba(0, 229, 255, 0.15), inset 0 0 20px rgba(0, 229, 255, 0.2);
+            background: radial-gradient(circle, rgba(0, 229, 255, 0.05) 0%, transparent 80%);
+            animation: rotateGlow 15s linear infinite;
+        }
+        @keyframes rotateGlow {
+            0% { transform: rotateY(0deg) rotateX(0deg); }
+            50% { transform: rotateY(180deg) rotateX(20deg); }
+            100% { transform: rotateY(360deg) rotateX(0deg); }
+        }
+        .line {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid rgba(0, 229, 255, 0.5);
+            border-radius: 80%;
+            animation: rotateGlobe 5s linear infinite;
+        }
+        .line:nth-child(2) { transform: rotateX(90deg); }
+        .line:nth-child(3) { transform: rotateX(90deg); }
+        .line:nth-child(4) { transform: rotateX(90deg); }
+        .line:nth-child(5) { transform: rotateY(90deg); }
+        .line:nth-child(6) { transform: rotateY(90deg); }
+        .ring {
+            position: absolute;
+            border: 2px solid rgba(0, 229, 255, 0.8);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.9);
+            animation: rotate linear infinite;
+            filter: blur(1px);
+        }
+        .ring1 { width: 180px; height: 180px; animation-duration: 10s; }
+        .ring2 { width: 260px; height: 260px; animation-duration: 14s; border-style: dashed; }
+        .ring3 { width: 340px; height: 340px; animation-duration: 20s; border-style: dotted; }
+        .dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00e5ff;
+            box-shadow: 0 0 20px #00e5ff, 0 0 40px #00e5ff;
+            top: 50%;
+            left: 50%;
+            transform-origin: -150px 0;
+            animation: orbit 6s linear infinite;
+        }
+        .dot2 { transform-origin: -200px 0; animation-duration: 8s; }
+        .dot3 { transform-origin: -210px 0; animation-duration: 12s; }
+        .dot4 { transform-origin: -220px 0; animation-duration: 10s; }
+        .dot5 { transform-origin: -230px 0; animation-duration: 10s; }
+        .dot6 { transform-origin: -230px 0; animation-duration: 9s; }
+        .sweep-container {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            z-index: 15;
+        }
+        .sweep {
+            position: absolute;
+            width: 50%;
+            height: 2px;
+            background: linear-gradient(to right, #00e5ff, transparent);
+            top: 50%;
+            transform-origin: left center;
+            animation: sweep 6s linear infinite;
+            opacity: 0.7;
+        }
+        @keyframes pulse {
+            from { box-shadow: 0 0 40px #00e5ff, 0 0 90px #00e5ff; }
+            to { box-shadow: 0 0 60px #00e5ff, 0 0 120px #00e5ff; }
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes orbit {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes sweep {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes rotateGlobe {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00e5ff;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #00e5ff;
+            animation: blink 2s infinite alternate;
+        }
+        @keyframes blink {
+            from { opacity: 0.2; }
+            to { opacity: 1; }
+        }
+        .control-buttons {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 25;
+        }
+        .control-button {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #00e5ff;
+            background: #00e5ff10;
+            color: #00e5ff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .control-button:hover {
+            background: #00e5ff30;
+            box-shadow: 0 0 10px #00e5ff;
+        }
+        .notebook-panel {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 300px;
+            max-height: 80vh;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #00e5ff;
+            border-radius: 8px;
+            padding: 15px;
+            display: none;
+            flex-direction: column;
+            z-index: 30;
+            overflow-y: auto;
+            font-family: 'Orbitron', sans-serif;
+            color: #b3d2e7;
+            box-shadow: 0 0 15px #00e5ff;
+        }
+        .notebook-entry {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #00e5ff33;
+        }
+        .notebook-entry-timestamp {
+            font-size: 12px;
+            color: #00e5ff;
+            margin-bottom: 5px;
+        }
+        .notebook-entry-command {
+            font-size: 14px;
+            color: #f5f8f8;
+            font-weight: bold;
+        }
+        .notebook-entry-response {
+            font-size: 14px;
+            color: #b3d2e7;
+        }
+        .notebook-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .notebook-button {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #00e5ff;
+            background: #00e5ff10;
+            color: #00e5ff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .notebook-button:hover {
+            background: #00e5ff30;
+            box-shadow: 0 0 10px #00e5ff;
+        }
+        .chatbox {
+            position: absolute;
+            bottom: 10px;
+            left: 16%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #00e5ff;
+            border-radius: 8px;
+            padding: 10px;
+            z-index: 30;
+            box-shadow: 0 0 15px #00e5ff;
+        }
+        .chat-display {
+            height: 100px;
+            overflow-y: auto;
+            color: #b3d2e7;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 10px;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.8);
+        }
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input {
+            flex-grow: 1;
+            padding: 5px;
+            border-radius: 6px;
+            border: 1px solid #00e5ff;
+            background: rgba(0, 0, 0, 0.5);
+            color: #00e5ff;
+            font-size: 16px;
+            outline: none;
+        }
+        .chat-send {
+            padding: 5px 10px;
+            border-radius: 6px;
+            border: 1px solid #00e5ff;
+            background: #00e5ff10;
+            color: #00e5ff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .chat-send:hover {
+            background: #00e5ff30;
+            box-shadow: 0 0 10px #00e5ff;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix"></canvas>
+
+    <div class="login-form" id="loginForm">
+        <h2>LOGIN</h2>
+        <input type="text" placeholder="Username" id="username">
+        <input type="password" placeholder="Password" id="password" minlength="8" required>
+        <button id="loginButton">Sign In</button>
+    </div>
+
+    <div class="hud" id="hud">
+        <div class="core">
+            <div class="earth-glow">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+        </div>
+        <div class="ring ring1"></div>
+        <div class="ring ring2"></div>
+        <div class="ring ring3"></div>
+        <div class="dot"></div>
+        <div class="dot dot2"></div>
+        <div class="dot dot3"></div>
+        <div class="dot dot4"></div>
+        <div class="dot dot5"></div>
+        <div class="dot dot6"></div>
+        <div class="hud-text-bold">JARVIS</div>
+        <div class="hud-subtext">Initializing...</div>
+        <div class="sweep-container">
+            <div class="sweep"></div>
+        </div>
+        <div class="control-buttons">
+            <button class="control-button" id="startButton">Start Listening</button>
+            <button class="control-button" id="stopButton">Stop Listening</button>
+            <button class="control-button" id="notebookButton">Toggle Notebook</button>
+            <button class="control-button" id="retryMicButton" style="display: none;">Retry Microphone</button>
+            <button class="control-button" id="quietButton">Quiet Mode</button>
+        </div>
+        <div class="notebook-panel" id="notebookPanel">
+            <div class="notebook-controls">
+                <button class="notebook-button" id="clearNotebookButton">Clear Notebook</button>
+            </div>
+            <div id="notebookEntries"></div>
+        </div>
+        <div class="chatbox">
+            <div class="chat-display" id="chatDisplay"></div>
+            <div class="chat-input-container">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Type a command...">
+                <button class="chat-send" id="sendButton">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM fully loaded at", new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+
+            // Browser compatibility check
+            function checkBrowserCompatibility() {
+                const issues = [];
+                if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+                    issues.push("Speech Recognition API not supported. Please use Chrome or Edge browser.");
+                }
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    issues.push("Media Devices API not supported. Please use a modern browser.");
+                }
+                if (issues.length > 0) {
+                    console.error("Browser compatibility issues:", issues);
+                    alert("Browser Compatibility Issues:\n\n" + issues.join("\n\n") + "\n\nPlease use the latest version of Chrome or Edge for the best experience.");
+                    return false;
+                }
+                return true;
+            }
+
+            // Debug DOM elements
+            function debugElements() {
+                const elements = [
+                    { id: 'startButton', name: 'Start Button' },
+                    { id: 'stopButton', name: 'Stop Button' },
+                    { id: 'notebookButton', name: 'Notebook Button' },
+                    { id: 'retryMicButton', name: 'Retry Microphone Button' },
+                    { id: 'hud', name: 'HUD' },
+                    { id: 'loginForm', name: 'Login Form' },
+                    { id: 'username', name: 'Username Input' },
+                    { id: 'password', name: 'Password Input' },
+                    { id: 'notebookPanel', name: 'Notebook Panel' },
+                    { id: 'notebookEntries', name: 'Notebook Entries' },
+                    { id: 'quietButton', name: 'Quiet Button' },
+                    { id: 'chatDisplay', name: 'Chat Display' },
+                    { id: 'chatInput', name: 'Chat Input' }
+                ];
+                elements.forEach(el => {
+                    if (!document.getElementById(el.id)) {
+                        console.error(`${el.name} not found in DOM (id: ${el.id})`);
+                    } else {
+                        console.log(`${el.name} found in DOM`);
+                    }
+                });
+            }
+            // Check browser compatibility first
+            if (!checkBrowserCompatibility()) {
+                console.error("Browser not compatible. Some features may not work.");
+            }
+            
+            debugElements();
+
+            // Load notebook entries from localStorage
+            function loadNotebook() {
+                console.log("Loading notebook...");
+                const notebookEntries = document.getElementById('notebookEntries');
+                if (!notebookEntries) {
+                    console.error("Notebook entries element not found");
+                    alert("Error: Notebook entries element missing.");
+                    return;
+                }
+                const entries = JSON.parse(localStorage.getItem('jarvisNotebook') || '[]');
+                notebookEntries.innerHTML = '';
+                entries.forEach(entry => {
+                    const entryDiv = document.createElement('div');
+                    entryDiv.className = 'notebook-entry';
+                    entryDiv.innerHTML = `
+                        <div class="notebook-entry-timestamp">${entry.timestamp}</div>
+                        <div class="notebook-entry-command">Command: ${entry.command}</div>
+                        <div class="notebook-entry-response">Response: ${entry.response}</div>
+                    `;
+                    notebookEntries.appendChild(entryDiv);
+                });
+                console.log("Notebook loaded with", entries.length, "entries");
+            }
+
+            // Save entry to notebook
+            function saveToNotebook(command, response) {
+                console.log("Saving to notebook:", { command, response });
+                const entries = JSON.parse(localStorage.getItem('jarvisNotebook') || '[]');
+                const timestamp = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+                entries.push({ timestamp, command, response });
+                localStorage.setItem('jarvisNotebook', JSON.stringify(entries));
+                loadNotebook();
+            }
+
+            // Toggle notebook visibility
+            function toggleNotebook() {
+                console.log("Attempting to toggle notebook...");
+                const notebook = document.getElementById('notebookPanel');
+                if (!notebook) {
+                    console.error("Notebook panel not found in toggleNotebook");
+                    alert("Error: Notebook panel not found.");
+                    return;
+                }
+                console.log("Current notebook display:", notebook.style.display);
+                notebook.style.display = notebook.style.display === 'none' || notebook.style.display === '' ? 'flex' : 'none';
+                console.log("Notebook display set to:", notebook.style.display);
+            }
+
+            // Clear notebook
+            function clearNotebook() {
+                console.log("Clearing notebook...");
+                fetch('/ask', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({query: 'clear notebook'})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.response);
+                    localStorage.setItem('jarvisNotebook', '[]');
+                    const notebookEntries = document.getElementById('notebookEntries');
+                    if (notebookEntries) {
+                        notebookEntries.innerHTML = '';
+                        console.log("Notebook entries cleared from DOM");
+                    } else {
+                        console.error("Notebook entries element not found for clearing");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error clearing notebook:", error);
+                    alert("Error clearing notebook: " + error.message);
+                });
+            }
+
+            // TTS with throttling and quiet mode
+            let lastSpoken = 0;
+            const speakThrottleMs = 3000;
+            let isQuietMode = false;
+
+            function speak(text) {
+                console.log("Attempting to speak:", text, "Quiet mode:", isQuietMode);
+                const now = Date.now();
+                if (now - lastSpoken < speakThrottleMs || isQuietMode) {
+                    console.log("Throttling or quiet mode active, skipping speech:", text);
+                    return;
+                }
+                const utter = new SpeechSynthesisUtterance(text);
+                utter.rate = 1;
+                utter.pitch = 1;
+                speechSynthesis.speak(utter);
+                lastSpoken = now;
+                console.log("Speaking:", text);
+            }
+
+            function toggleQuietMode() {
+                console.log("Toggling quiet mode...");
+                isQuietMode = !isQuietMode;
+                const quietButton = document.getElementById('quietButton');
+                if (quietButton) {
+                    quietButton.textContent = isQuietMode ? 'Unmute' : 'Quiet Mode';
+                    console.log("Quiet mode set to:", isQuietMode);
+                    if (isQuietMode) {
+                        // Cancel ongoing speech
+                        speechSynthesis.cancel();
+                        console.log("Ongoing speech cancelled");
+                        // Restart recognition for immediate command input
+                        if (isRunning && recognition) {
+                            recognition.stop();
+                            console.log("Recognition stopped for quiet mode");
+                            setTimeout(() => {
+                                startListening();
+                            }, 200);
+                        }
+                    }
+                    reply(`Voice ${isQuietMode ? 'muted' : 'unmuted'}.`);
+                } else {
+                    console.error("Quiet button not found");
+                }
+            }
+
+            // Handle 'Q' key press for quick quiet toggle
+            document.addEventListener('keydown', (event) => {
+                console.log("Key pressed:", event.key);
+                if (event.key.toLowerCase() === 'q') {
+                    toggleQuietMode();
+                }
+            });
+
+            function reply(text, command = null) {
+                console.log("Displaying reply:", { text, command });
+                const subtext = document.querySelector('.hud-subtext');
+                if (!subtext) {
+                    console.error("HUD subtext element not found");
+                    alert("Error: HUD subtext element missing.");
+                    return;
+                }
+                // Always display text first (this works even if TTS fails)
+                subtext.innerText = command ? `Command: ${command}\nResponse: ${text}` : text;
+                console.log("HUD subtext set to:", subtext.innerText);
+                if (command) {
+                    saveToNotebook(command, text);
+                }
+                // Try to speak, but don't fail if TTS has issues (e.g., during network errors)
+                try {
+                    speak(text);
+                } catch (error) {
+                    console.warn("TTS failed but reply text displayed:", error);
+                    // Text is already displayed above, so user can still see the response
+                }
+            }
+
+            function login() {
+                console.log("Login function called at", new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+                const username = document.getElementById('username');
+                const password = document.getElementById('password');
+                const loginForm = document.getElementById('loginForm');
+                const hud = document.getElementById('hud');
+                const startButton = document.getElementById('startButton');
+                const stopButton = document.getElementById('stopButton');
+                const retryMicButton = document.getElementById('retryMicButton');
+                const notebookButton = document.getElementById('notebookButton');
+
+                console.log("DOM elements check:", {
+                    username: !!username,
+                    password: !!password,
+                    loginForm: !!loginForm,
+                    hud: !!hud,
+                    startButton: !!startButton,
+                    stopButton: !!stopButton,
+                    retryMicButton: !!retryMicButton,
+                    notebookButton: !!notebookButton
+                });
+
+                if (!username || !password || !loginForm || !hud || !startButton || !stopButton || !retryMicButton || !notebookButton) {
+                    console.error("One or more DOM elements not found during login");
+                    alert("Error: Critical interface elements missing. Check console for details.");
+                    return;
+                }
+
+                const usernameValue = username.value.trim();
+                const passwordValue = password.value.trim();
+                console.log("Login attempt - Username:", usernameValue, "Password length:", passwordValue.length);
+
+                if (!usernameValue) {
+                    console.error("Login failed: Username is empty");
+                    alert("Please enter a username.");
+                    return;
+                }
+                if (!passwordValue) {
+                    console.error("Login failed: Password is empty");
+                    alert("Please enter a password.");
+                    return;
+                }
+                if (passwordValue.length < 8) {
+                    console.error("Login failed: Password length is", passwordValue.length);
+                    alert("Password must be at least 8 characters long.");
+                    return;
+                }
+
+                console.log("Login validation passed, transitioning to HUD");
+                try {
+                    loginForm.style.display = 'none';
+                    console.log("Login form hidden");
+                    hud.style.display = 'flex';
+                    console.log("HUD displayed");
+                    startButton.style.display = 'block';
+                    console.log("Start button set to block");
+                    stopButton.style.display = 'none';
+                    console.log("Stop button set to none");
+                    retryMicButton.style.display = 'none';
+                    console.log("Retry mic button set to none");
+                    notebookButton.style.display = 'block';
+                    console.log("Notebook button set to block");
+                    reply("Access granted. JARVIS online. Listening for commands...");
+                    loadNotebook();
+                    console.log("Calling startListening from login");
+                    startListening();
+                } catch (error) {
+                    console.error("Error during HUD transition:", error.message);
+                    alert("Error transitioning to HUD: " + error.message);
+                }
+            }
+
+            async function checkMicPermission() {
+                console.log("Checking microphone permission...");
+                const startButton = document.getElementById('startButton');
+                const stopButton = document.getElementById('stopButton');
+                const retryMicButton = document.getElementById('retryMicButton');
+                const notebookButton = document.getElementById('notebookButton');
+
+                if (!startButton || !stopButton || !retryMicButton || !notebookButton) {
+                    console.error("One or more button elements not found in checkMicPermission", {
+                        startButton: !!startButton,
+                        stopButton: !!stopButton,
+                        retryMicButton: !!retryMicButton,
+                        notebookButton: !!notebookButton
+                    });
+                    alert("Error: Interface buttons missing.");
+                    return false;
+                }
+
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    stream.getTracks().forEach(track => track.stop());
+                    console.log("Microphone permission granted");
+                    retryMicButton.style.display = 'none';
+                    return true;
+                } catch (error) {
+                    console.error("Microphone permission error:", error.name, error.message);
+                    if (error.name === 'NotAllowedError') {
+                        alert("Microphone access denied. Please allow microphone in browser settings (chrome://settings/content/microphone) and click Retry Microphone.");
+                        retryMicButton.style.display = 'block';
+                    } else if (error.name === 'NotFoundError') {
+                        alert("No microphone found. Please connect a microphone and retry.");
+                        retryMicButton.style.display = 'block';
+                    } else {
+                        alert(`Microphone error: ${error.message}`);
+                        retryMicButton.style.display = 'block';
+                    }
+                    startButton.style.display = 'block';
+                    stopButton.style.display = 'none';
+                    notebookButton.style.display = 'block';
+                    return false;
+                }
+            }
+
+            function retryMicPermission() {
+                console.log("Retrying microphone permission...");
+                checkMicPermission().then(granted => {
+                    if (granted) {
+                        startListening();
+                    }
+                });
+            }
+
+            async function handleCommand(query) {
+                console.log("Sending command:", query, "at", new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+                const startTime = performance.now();
+                try {
+                    const response = await fetch('/ask', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ query: query.replace(/hey jarvis|ok jarvis/i, '').trim() })
+                    });
+                    const data = await response.json();
+                    const endTime = performance.now();
+                    console.log("Backend response:", data, "in", (endTime - startTime).toFixed(2), "ms");
+
+                    if (!response.ok) {
+                        const errorMessage = data.error || `HTTP error! status: ${response.status}`;
+                        throw new Error(errorMessage);
+                    }
+
+                    if (data.error) {
+                        updateChat(`Error: ${data.error}`, query);
+                    } else {
+                        updateChat(data.response, query);
+                    }
+                } catch (error) {
+                    console.error("Fetch error:", error);
+                    updateChat(`Error: Could not connect to backend - ${error.message}`, query);
+                }
+            }
+
+            function updateChat(response, command = null) {
+                const chatDisplay = document.getElementById('chatDisplay');
+                if (!chatDisplay) {
+                    console.error("Chat display element not found");
+                    alert("Error: Chat display element missing. Refresh the page or check the HTML.");
+                    return;
+                }
+                const timestamp = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+                let message = `<div>${timestamp}<br>`;
+                if (command) message += `<strong>Command:</strong> ${command}<br>`;
+                message += `<strong>Response:</strong> ${response}</div>`;
+                chatDisplay.innerHTML += message;
+                chatDisplay.scrollTop = chatDisplay.scrollHeight;
+                // Update the main HUD display with reply (reply will also save to notebook and speak)
+                reply(response, command);
+            }
+
+            function sendCommand() {
+                const chatInput = document.getElementById('chatInput');
+                if (!chatInput) {
+                    console.error("Chat input element not found");
+                    alert("Error: Chat input element missing. Refresh the page or check the HTML.");
+                    return;
+                }
+                const query = chatInput.value.trim();
+                if (query) {
+                    console.log("Sending typed command:", query);
+                    handleCommand(query);
+                    chatInput.value = '';
+                } else {
+                    alert("Please enter a command.");
+                }
+            }
+
+            const domElements = {
+                loginForm: document.getElementById('loginForm'),
+                usernameInput: document.getElementById('username'),
+                passwordInput: document.getElementById('password'),
+                loginButton: document.getElementById('loginButton'),
+                hud: document.getElementById('hud'),
+                startButton: document.getElementById('startButton'),
+                stopButton: document.getElementById('stopButton'),
+                notebookButton: document.getElementById('notebookButton'),
+                retryMicButton: document.getElementById('retryMicButton'),
+                quietButton: document.getElementById('quietButton'),
+                notebookPanel: document.getElementById('notebookPanel'),
+                notebookEntries: document.getElementById('notebookEntries'),
+                clearNotebookButton: document.getElementById('clearNotebookButton'),
+                chatDisplay: document.getElementById('chatDisplay'),
+                chatInput: document.getElementById('chatInput'),
+                sendButton: document.getElementById('sendButton'),
+                hudSubtext: document.querySelector('.hud-subtext'),
+                matrixCanvas: document.getElementById('matrix'),
+            };
+
+            function init() {
+                if (!checkBrowserCompatibility()) {
+                    console.error("Browser not compatible. Some features may not work.");
+                }
+
+                debugElements();
+
+                if (domElements.loginButton) {
+                    domElements.loginButton.addEventListener('click', login);
+                }
+
+                if (domElements.sendButton) {
+                    domElements.sendButton.addEventListener('click', sendCommand);
+                }
+
+                if (domElements.chatInput) {
+                    domElements.chatInput.addEventListener('keypress', (event) => {
+                        if (event.key === 'Enter') {
+                            sendCommand();
+                        }
+                    });
+                }
+
+                if (domElements.startButton) {
+                    domElements.startButton.addEventListener('click', startListening);
+                }
+
+                if (domElements.stopButton) {
+                    domElements.stopButton.addEventListener('click', stopListening);
+                }
+
+                if (domElements.notebookButton) {
+                    domElements.notebookButton.addEventListener('click', toggleNotebook);
+                }
+
+                if (domElements.clearNotebookButton) {
+                    domElements.clearNotebookButton.addEventListener('click', clearNotebook);
+                }
+
+                if (domElements.retryMicButton) {
+                    domElements.retryMicButton.addEventListener('click', retryMicPermission);
+                }
+
+                if (domElements.quietButton) {
+                    domElements.quietButton.addEventListener('click', toggleQuietMode);
+                }
+
+                loadNotebook();
+                initializeMatrix();
+                createStars();
+            }
+
+            function initializeMatrix() {
+                // Matrix effect
+                const canvas = document.getElementById('matrix');
+                if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                    const columns = Math.floor(canvas.width / 20);
+                    const drops = Array(columns).fill(0);
+                    function drawMatrix() {
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.fillStyle = 'rgba(0, 229, 255, 0.15)';
+                        ctx.font = '16px monospace';
+                        for (let i = 0; i < drops.length; i++) {
+                            const text = Math.floor(Math.random() * 2);
+                            ctx.fillText(text, i * 20, drops[i] * 20);
+                            drops[i]++;
+                            if (drops[i] * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                        }
+                    }
+                    setInterval(drawMatrix, 50);
+                    window.addEventListener('resize', () => {
+                        canvas.width = window.innerWidth;
+                        canvas.height = window.innerHeight;
+                    });
+                } else {
+                    console.error("Matrix canvas not found");
+                }
+            }
+
+            function createStars() {
+                // Stars
+                for (let i = 0; i < 200; i++) {
+                    let s = document.createElement('div');
+                    s.classList.add('star');
+                    s.style.top = Math.random() * 100 + '%';
+                    s.style.left = Math.random() * 100 + '%';
+                    s.style.animationDelay = Math.random() * 2 + 's';
+                    s.style.width = s.style.height = (Math.random() * 3 + 1) + 'px';
+                    document.body.appendChild(s);
+                }
+            }
+
+            init();
+
+            let isRunning = false;
+            let recognition = null;
+            let manuallyStopped = false; // Flag to track if user manually stopped listening
+            let lastErrorWasNetwork = false; // Flag to track if last error was network error
+
+            function createRecognition() {
+                console.log("Creating speech recognition object...");
+                if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+                    console.error("SpeechRecognition API not available");
+                    alert("Speech recognition not supported in this browser. Please use Chrome or Edge.");
+                    return null;
+                }
+                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.continuous = false;
+                recognition.interimResults = true;
+                recognition.lang = "en-US";
+
+                recognition.onstart = () => {
+                    console.log("Speech recognition started");
+                    isRunning = true;
+                    reply("Listening for 'Hey Jarvis'...");
+                    const startButton = document.getElementById('startButton');
+                    const stopButton = document.getElementById('stopButton');
+                    const retryMicButton = document.getElementById('retryMicButton');
+                    const notebookButton = document.getElementById('notebookButton');
+                    if (!startButton || !stopButton || !retryMicButton || !notebookButton) {
+                        console.error("One or more button elements not found in recognition.onstart", {
+                            startButton: !!startButton,
+                            stopButton: !!stopButton,
+                            retryMicButton: !!retryMicButton,
+                            notebookButton: !!notebookButton
+                        });
+                        alert("Error: Interface buttons missing.");
+                        return;
+                    }
+                    startButton.style.display = 'none';
+                    stopButton.style.display = 'block';
+                    retryMicButton.style.display = 'none';
+                    notebookButton.style.display = 'block';
+                };
+
+                recognition.onresult = (event) => {
+                    if (!event.results || !event.results[0] || !event.results[0][0]) {
+                        console.error("No results in speech recognition event");
+                        reply("No speech detected. Please try again.");
+                        recognition.stop();
+                        return;
+                    }
+                    const transcript = event.results[0][0].transcript.trim().toLowerCase();
+                    const confidence = event.results[0][0].confidence;
+                    console.log("Heard:", transcript, "Confidence:", confidence);
+                    
+                    // Check for wake word in interim results too (more responsive)
+                    const checkWakeWord = (text) => {
+                        const normalizedText = text.toLowerCase().replace(/[^\w\s]/g, '');
+                        return normalizedText.includes("hey jarvis") || 
+                               normalizedText.includes("ok jarvis") ||
+                               normalizedText.includes("hi jarvis") ||
+                               normalizedText.includes("hey jervis") ||
+                               normalizedText.includes("ok jervis") ||
+                               normalizedText.includes("jarvis") && (normalizedText.includes("hey") || normalizedText.includes("ok"));
+                    };
+                    
+                    if (event.results[0].isFinal || checkWakeWord(transcript)) {
+                        if (checkWakeWord(transcript)) {
+                            console.log("Wake word detected:", transcript);
+                            recognition.stop();
+                            // Wait for recognition to fully stop before starting command listening
+                            setTimeout(() => {
+                                speak("Yes Boss! I'm listening...");
+                                // Wait a bit more for speech to start before switching modes
+                                setTimeout(() => {
+                                    listenCommand();
+                                }, 300);
+                            }, 300);
+                        } else if (event.results[0].isFinal) {
+                            console.log("No wake word detected:", transcript);
+                            reply("Please say 'Hey Jarvis' to activate.");
+                            recognition.stop();
+                        }
+                    } else {
+                        console.log("Interim result:", transcript, "Confidence:", confidence);
+                    }
+                };
+
+                recognition.onerror = (event) => {
+                    console.error("Recognition error:", event.error, event.message || "No message");
+                    isRunning = false;
+                    const startButton = document.getElementById('startButton');
+                    const stopButton = document.getElementById('stopButton');
+                    const retryMicButton = document.getElementById('retryMicButton');
+                    const notebookButton = document.getElementById('notebookButton');
+                    if (!startButton || !stopButton || !retryMicButton || !notebookButton) {
+                        console.error("One or more button elements not found in recognition.onerror", {
+                            startButton: !!startButton,
+                            stopButton: !!stopButton,
+                            retryMicButton: !!retryMicButton,
+                            notebookButton: !!notebookButton
+                        });
+                        alert("Error: Interface buttons missing.");
+                        return;
+                    }
+                    if (event.error === 'not-allowed') {
+                        alert("Microphone access denied. Please allow microphone in browser settings (chrome://settings/content/microphone) and click Retry Microphone.");
+                        retryMicButton.style.display = 'block';
+                        manuallyStopped = true; // Don't auto-restart on permission errors
+                    } else if (event.error === 'no-speech') {
+                        reply("No speech detected. Continuing to listen...");
+                        retryMicButton.style.display = 'none';
+                        // Auto-restart will happen in onend
+                    } else if (event.error === 'network') {
+                        lastErrorWasNetwork = true;
+                        reply("Network error detected. Please check your internet connection. Retrying in a moment...");
+                        retryMicButton.style.display = 'none';
+                        // Auto-restart will happen in onend with longer delay
+                    } else {
+                        lastErrorWasNetwork = false;
+                        reply(`Speech recognition error: ${event.error}. Retrying...`);
+                        retryMicButton.style.display = 'none';
+                        // Auto-restart will happen in onend
+                    }
+                    if (!manuallyStopped && event.error !== 'not-allowed') {
+                        // Keep buttons as is - will auto-restart
+                    } else {
+                        startButton.style.display = 'block';
+                        stopButton.style.display = 'none';
+                        notebookButton.style.display = 'block';
+                    }
+                };
+
+                recognition.onend = () => {
+                    console.log("Recognition stopped, manuallyStopped:", manuallyStopped);
+                    isRunning = false;
+                    const startButton = document.getElementById('startButton');
+                    const stopButton = document.getElementById('stopButton');
+                    const retryMicButton = document.getElementById('retryMicButton');
+                    const notebookButton = document.getElementById('notebookButton');
+                    if (!startButton || !stopButton || !retryMicButton || !notebookButton) {
+                        console.error("One or more button elements not found in recognition.onend", {
+                            startButton: !!startButton,
+                            stopButton: !!stopButton,
+                            retryMicButton: !!retryMicButton,
+                            notebookButton: !!notebookButton
+                        });
+                        alert("Error: Interface buttons missing.");
+                        return;
+                    }
+                    
+                    // Auto-restart if not manually stopped
+                    if (!manuallyStopped && recognition) {
+                        console.log("Auto-restarting recognition...", { lastErrorWasNetwork });
+                        // Use longer delay for network errors (3 seconds) vs normal errors (500ms)
+                        const retryDelay = lastErrorWasNetwork ? 3000 : 500;
+                        setTimeout(() => {
+                            try {
+                                if (recognition && !manuallyStopped) {
+                                    recognition.start();
+                                    lastErrorWasNetwork = false; // Reset flag after successful restart
+                                    // Keep buttons as is (stop button visible)
+                                }
+                            } catch (error) {
+                                console.error("Auto-restart failed:", error.message);
+                                lastErrorWasNetwork = false; // Reset flag on error
+                                startButton.style.display = 'block';
+                                stopButton.style.display = 'none';
+                                retryMicButton.style.display = 'none';
+                                notebookButton.style.display = 'block';
+                                reply("Listening stopped. Click Start Listening to resume.");
+                            }
+                        }, retryDelay);
+                    } else {
+                        // User manually stopped, show start button
+                        startButton.style.display = 'block';
+                        stopButton.style.display = 'none';
+                        retryMicButton.style.display = 'none';
+                        notebookButton.style.display = 'block';
+                        reply("Listening stopped. Click Start Listening to resume.");
+                    }
+                };
+                console.log("Speech recognition object created successfully");
+                return recognition;
+            }
+
+            function startListening() {
+                console.log("Attempting to start listening at", new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+                manuallyStopped = false; // Reset flag when starting
+                lastErrorWasNetwork = false; // Reset network error flag when starting
+                const startButton = document.getElementById('startButton');
+                const stopButton = document.getElementById('stopButton');
+                const retryMicButton = document.getElementById('retryMicButton');
+                const notebookButton = document.getElementById('notebookButton');
+
+                if (!startButton || !stopButton || !retryMicButton || !notebookButton) {
+                    console.error("One or more button elements not found in startListening", {
+                        startButton: !!startButton,
+                        stopButton: !!stopButton,
+                        retryMicButton: !!retryMicButton,
+                        notebookButton: !!notebookButton
+                    });
+                    alert("Error: Interface buttons missing. Check console for details.");
+                    return;
+                }
+
+                if (isRunning) {
+                    console.log("Recognition already running, stopping before restarting...");
+                    if (recognition) {
+                        recognition.stop();
+                        // Wait for stop to complete before restarting
+                        setTimeout(() => {
+                            initiateListening();
+                        }, 300);
+                    }
+                    return;
+                }
+
+                initiateListening();
+            }
+
+            function initiateListening() {
+                console.log("Initiating listening...");
+                const startButton = document.getElementById('startButton');
+                const stopButton = document.getElementById('stopButton');
+                const retryMicButton = document.getElementById('retryMicButton');
+                const notebookButton = document.getElementById('notebookButton');
+
+                if (!startButton || !stopButton || !retryMicButton || !notebookButton) {
+                    console.error("One or more button elements not found in initiateListening", {
+                        startButton: !!startButton,
+                        stopButton: !!stopButton,
+                        retryMicButton: !!retryMicButton,
+                        notebookButton: !!notebookButton
+                    });
+                    alert("Error: Interface buttons missing.");
+                    return;
+                }
+
+                if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+                    console.error("SpeechRecognition API not supported");
+                    alert("Speech recognition not supported in this browser. Please use Chrome or Edge.");
+                    return;
+                }
+
+                if (!recognition) {
+                    console.log("Recognition object is null, creating new one...");
+                    recognition = createRecognition();
+                    if (!recognition) {
+                        console.error("Failed to create speech recognition object");
+                        return;
+                    }
+                }
+
+                console.log("Checking microphone permission before starting...");
+                checkMicPermission().then(granted => {
+                    if (!granted) {
+                        console.error("Microphone permission not granted, cannot start listening");
+                        return;
+                    }
+                    try {
+                        console.log("Starting speech recognition...");
+                        if (recognition) {
+                            recognition.start();
+                            isRunning = true;
+                            startButton.style.display = 'none';
+                            console.log("Start button hidden");
+                            stopButton.style.display = 'block';
+                            console.log("Stop button shown");
+                            retryMicButton.style.display = 'none';
+                            console.log("Retry mic button hidden");
+                            notebookButton.style.display = 'block';
+                            console.log("Notebook button shown");
+                            reply("Listening for 'Hey Jarvis'...");
+                        } else {
+                            console.error("Recognition object is null during start attempt");
+                            alert("Error: Speech recognition object not initialized.");
+                        }
+                    } catch (error) {
+                        console.error("Failed to start recognition:", error.message);
+                        isRunning = false;
+                        if (error.message.includes("recognition has already started")) {
+                            console.log("Recognition already started, stopping and retrying...");
+                            if (recognition) {
+                                recognition.stop();
+                                recognition.onend = () => {
+                                    setTimeout(() => {
+                                        try {
+                                            recognition.start();
+                                            isRunning = true;
+                                            startButton.style.display = 'none';
+                                            stopButton.style.display = 'block';
+                                            retryMicButton.style.display = 'none';
+                                            notebookButton.style.display = 'block';
+                                            reply("Listening for 'Hey Jarvis'...");
+                                        } catch (retryError) {
+                                            console.error("Retry failed:", retryError.message);
+                                            alert("Failed to start listening: Speech recognition error. Please try again or check console.");
+                                            startButton.style.display = 'block';
+                                            stopButton.style.display = 'none';
+                                            retryMicButton.style.display = 'none';
+                                            notebookButton.style.display = 'block';
+                                        }
+                                    }, 200);
+                                };
+                            }
+                        } else {
+                            alert(`Failed to start listening: ${error.message}. Please check microphone permissions and try again.`);
+                            startButton.style.display = 'block';
+                            stopButton.style.display = 'none';
+                            retryMicButton.style.display = 'block';
+                            notebookButton.style.display = 'block';
+                        }
+                    }
+                });
+            }
+
+            function stopListening() {
+                console.log("Stopping listening manually...");
+                manuallyStopped = true; // Set flag to prevent auto-restart
+                if (recognition && isRunning) {
+                    recognition.stop();
+                    isRunning = false;
+                    console.log("Recognition stopped by stopListening");
+                }
+                const startButton = document.getElementById('startButton');
+                const stopButton = document.getElementById('stopButton');
+                const retryMicButton = document.getElementById('retryMicButton');
+                const notebookButton = document.getElementById('notebookButton');
+                if (!startButton || !stopButton || !retryMicButton || !notebookButton) {
+                    console.error("One or more button elements not found in stopListening", {
+                        startButton: !!startButton,
+                        stopButton: !!stopButton,
+                        retryMicButton: !!retryMicButton,
+                        notebookButton: !!notebookButton
+                    });
+                    alert("Error: Interface buttons missing.");
+                    return;
+                }
+                startButton.style.display = 'block';
+                console.log("Start button shown");
+                stopButton.style.display = 'none';
+                console.log("Stop button hidden");
+                retryMicButton.style.display = 'none';
+                console.log("Retry mic button hidden");
+                notebookButton.style.display = 'block';
+                console.log("Notebook button shown");
+                reply("Listening stopped. Click Start Listening to resume.");
+            }
+
+            function listenCommand() {
+                console.log("Listening for command...");
+                
+                // If recognition is still running, stop it and wait
+                if (isRunning && recognition) {
+                    console.log("Recognition still running, stopping before switching to command mode...");
+                    recognition.stop();
+                    // Wait longer to ensure recognition fully stops
+                    setTimeout(() => {
+                        listenCommand();
+                    }, 800);
+                    return;
+                }
+                
+                // If recognition object is null, create a new one
+                if (!recognition) {
+                    console.log("Recognition object is null in listenCommand, creating new one...");
+                    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+                        console.error("SpeechRecognition API not available");
+                        reply("Speech recognition not supported. Please use Chrome or Edge.");
+                        return;
+                    }
+                    recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                }
+                
+                recognition.continuous = false;
+                recognition.interimResults = true;
+                recognition.lang = "en-US";
+                // Set max alternatives for better recognition
+                if (recognition.maxAlternatives !== undefined) {
+                    recognition.maxAlternatives = 1;
+                }
+
+                recognition.onstart = () => {
+                    console.log("Command recognition started");
+                    isRunning = true;
+                    reply("Ready for your command...");
+                };
+
+                recognition.onresult = async (event) => {
+                    if (!event.results || !event.results[0] || !event.results[0][0]) {
+                        console.error("No results in command recognition event");
+                        reply("No command detected. Please try again.");
+                        recognition.stop();
+                        return;
+                    }
+                    const transcript = event.results[0][0].transcript.trim();
+                    const confidence = event.results[0][0].confidence;
+                    console.log("Command:", transcript, "Confidence:", confidence);
+                    if (event.results[0].isFinal) {
+                        reply("Processing command...");
+                        await handleCommand(transcript);
+                        recognition.stop();
+                    } else {
+                        console.log("Interim command:", transcript, "Confidence:", confidence);
+                        // Show interim results on HUD for feedback
+                        const subtext = document.querySelector('.hud-subtext');
+                        if (subtext) {
+                            subtext.innerText = `Heard: "${transcript}"`;
+                        }
+                    }
+                };
+
+                recognition.onerror = (event) => {
+                    console.error("Command recognition error:", event.error, event.message || "No message");
+                    isRunning = false;
+                    reply(`Command recognition error: ${event.error}. Try again.`);
+                    // Reset recognition object to recreate it with wake word handlers
+                    recognition = null;
+                    // Wait a bit before restarting to ensure clean state
+                    setTimeout(() => {
+                        startListening();
+                    }, 500);
+                };
+
+                recognition.onend = () => {
+                    console.log("Command recognition stopped");
+                    isRunning = false;
+                    // Reset recognition object to recreate it with wake word handlers
+                    recognition = null;
+                    // Wait a bit before restarting to ensure clean state
+                    setTimeout(() => {
+                        startListening();
+                    }, 500);
+                };
+
+                try {
+                    console.log("Starting command recognition...");
+                    // Wait a moment to ensure previous recognition is fully stopped
+                    setTimeout(() => {
+                        try {
+                            if (!recognition) {
+                                console.error("Recognition object became null before starting");
+                                startListening();
+                                return;
+                            }
+                            recognition.start();
+                            console.log("Command recognition started successfully");
+                        } catch (startError) {
+                            console.error("Failed to start command recognition:", startError.message);
+                            if (startError.message.includes("recognition has already started")) {
+                                console.log("Recognition already started, stopping and retrying...");
+                                recognition.stop();
+                                setTimeout(() => {
+                                    try {
+                                        recognition.start();
+                                        console.log("Command recognition restarted successfully");
+                                    } catch (retryError) {
+                                        console.error("Retry failed in listenCommand:", retryError.message);
+                                        reply("Failed to listen for command. Please try again.");
+                                        recognition = null;
+                                        setTimeout(() => {
+                                            startListening();
+                                        }, 500);
+                                    }
+                                }, 500);
+                            } else {
+                                reply("Failed to listen for command: " + startError.message);
+                                recognition = null;
+                                setTimeout(() => {
+                                    startListening();
+                                }, 500);
+                            }
+                        }
+                    }, 300);
+                } catch (error) {
+                    console.error("Failed to set up command recognition:", error.message);
+                    isRunning = false;
+                    recognition = null;
+                    reply("Failed to set up command listening. Please try again.");
+                    setTimeout(() => {
+                        startListening();
+                    }, 500);
+                }
+            }
+
+            // Expose functions for debugging and external access
+            window.login = login;
+            window.startListening = startListening;
+            window.stopListening = stopListening;
+            window.toggleNotebook = toggleNotebook;
+            window.sendCommand = sendCommand;
+            window.toggleQuietMode = toggleQuietMode;
+        });
+    </script>
+</body>
+</html>
